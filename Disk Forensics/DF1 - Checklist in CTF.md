@@ -9,7 +9,7 @@ Bản thân mình thấy trong các giải CTF thì không phải challenge nào
 
 ### 2.1 Initial Access 
 
-Theo MITRE ATT&CK, `Initial Access - Truy cập ban đầu` bao gồm các kỹ thuật sử dụng các vectơ đầu vào khác nhau để có được chỗ đứng ban đầu trong mạng. Một số kỹ thuật phổ biến ở phase này mà có thể bạn đã thấy hoặc nghe qua như:Phishing, Valid Accounts, .... hoặc thông qua các lỗ hổng. Với phase này, mình thực hiện check một số mục bao gồm:
+Theo MITRE ATT&CK, `Initial Access - Truy cập ban đầu` bao gồm các kỹ thuật sử dụng các vectơ đầu vào khác nhau để có được chỗ đứng ban đầu trong mạng. Một số kỹ thuật phổ biến ở phase này mà có thể bạn đã thấy hoặc nghe qua như: Phishing, Valid Accounts, .... hoặc thông qua các lỗ hổng. Với phase này, mình thực hiện check một số mục bao gồm:
 
 #### 2.1.1 Lịch sử trình duyệt 
 
@@ -41,6 +41,35 @@ Phần này nhằm mục đích kiểm tra các user có đăng nhập từ các
 Công cụ sử dụng: 
 - `EvtxeCmd`: Chuyển evtx thành các file csv hoặc json.
 - `Timeline Explorer`: Sử dụng để đọc trực quan các file csv hoặc json.
+
+*Bổ sung:*
+
+Ở phần này ta có thể xem qua các thư mục của Users như Downloads, Documents, Desktop.... Nhớ là xem qua và không nên tập trung quá nhiều thời gian vào lục lọi các thư mục làm gì nếu không có hướng làm từ đầu.
+
+### 2.2 Execution 
+
+`Execution - thực thi` về cơ bản là thực thi các đoạn mã, command bởi attacker hoặc người ra đề (bối cảnh CTF). Với phần này, ta có thể tập trung vào một số evidence như: 
+
+#### 2.2.1 Event log
+
+Có khá nhiều event log có thể cho ta bằng chứng về việc chạy mã, command bởi attacker hoặc author. 
+
+| Event ID | Ý nghĩa | 
+| ------------- | ------------- |
+| 800 | Pipeline execution details | 
+| 4104 | Powershell Script Block Logging | 
+| 4103 | Module logging | 
+| 4100 | Executing pipeline | 
+
+Với EID 800 có khá nhiều sự kiện cũng sử dụng EID này nên ta cần lưu ý là phải là pipeline execution. Các EID này sẽ cho ta cái nhìn cơ bản, thậm chí là sâu để tìm ra nguyên nhân cuộc tấn công, các lệnh được thực thi.... Tất nhiên là nó sẽ chỉ có tác dụng nếu nó không bị xóa :)))
+
+Công cụ sử dụng: 
+- `EvtxeCmd`: Chuyển evtx thành các file csv hoặc json.
+- `Timeline Explorer`: Sử dụng để đọc trực quan các file csv hoặc json.
+
+#### 2.2.2 Console History
+
+File này nằm ở đường dẫn `C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine`. 
 
 
 
