@@ -5,15 +5,46 @@ Hôm nay do quá rảnh nên mình ngồi nghĩ lại mấy lần chơi CTF ở 
 
 ## 2. Checklist 
 
-Bản thân mình thấy trong các giải CTF thì không phải challenge nào cũng tuân theo 1 chuỗi tấn công hay 1 quy trình tấn công cụ thể nào. Nhưng thường thì mình sẽ follow theo các phase trong MITRE ATT@CK Framework. Các bạn có thể tham khảo tại [link này](https://attack.mitre.org/). 
+Bản thân mình thấy trong các giải CTF thì không phải challenge nào cũng tuân theo 1 chuỗi tấn công hay 1 quy trình tấn công cụ thể nào. Nhưng thường thì mình sẽ follow theo các phase trong MITRE ATT@CK Framework. Các bạn có thể tham khảo tại [link này](https://attack.mitre.org/). Tất nhiên là ta cũng phải theo yêu cầu đề bài là dạng tìm flag hay theo dạng trả lời câu hỏi để nhận flag. 
 
 ### 2.1 Initial Access 
 
-Theo MITRE ATT&CK, `Initial Access - Truy cập ban đầu` bao gồm các kỹ thuật sử dụng các vectơ đầu vào khác nhau để có được chỗ đứng ban đầu trong mạng. Một số kỹ thuật phổ biến ở phase này mà có thể bạn đã thấy hoặc nghe qua như : Phishing, Valid Accounts, .... hoặc thông qua các lỗ hổng. Với phase này, mình thực hiện check một số mục bao gồm : 
+Theo MITRE ATT&CK, `Initial Access - Truy cập ban đầu` bao gồm các kỹ thuật sử dụng các vectơ đầu vào khác nhau để có được chỗ đứng ban đầu trong mạng. Một số kỹ thuật phổ biến ở phase này mà có thể bạn đã thấy hoặc nghe qua như:Phishing, Valid Accounts, .... hoặc thông qua các lỗ hổng. Với phase này, mình thực hiện check một số mục bao gồm:
 
-- Lịch sử trình duyệt : 
+#### 2.1.1 Lịch sử trình duyệt 
+
+Ta cần kiểm tra xem nạn nhân có tải xuống file nào đáng ngờ không ? Có truy cập đường dẫn, liên kết đáng ngờ nào không ? Cơ bản trước là vậy. 
 
 | Trình duyệt | Đường dẫn | 
+| ------------- | ------------- |
 | Chrome | C:\Users\<username>\AppData\Local\Google\Chrome\User Data\Default |
 | Edge | C:\Users\<username>\AppData\Local\Microsoft\Edge\User Data\Default |
-| Firefox | C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile folder>\places.sqlite\ | 
+| Firefox | C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles\<profile folder>\places.sqlite | 
+
+Có thể attacker hay người ra đề có thể xóa phần này để làm tăng độ khó của bài. 
+
+Công cụ sử dụng:
+- `DB Browser`: Để mở file các file mình đã đề cập ở trên. Các file này thường là file database,
+
+#### 2.1.2 Event log
+
+Mình thường check 2 Event ID là 4624 - Login Successful và 4625 - Login Failed. Nếu đề bài liên quan đến AD thì có thể mở rộng ra event ID như:
+
+| Event ID | ý nghĩa| 
+| ------------- | ------------- |
+| 4672 | Special privileges assigned to new logon | 
+| 4771 | Kerberos pre-authentication failed |
+| 4776 | NTLM authentication failed |
+
+Phần này nhằm mục đích kiểm tra các user có đăng nhập từ các địa chỉ IP lạ nào không ? Người dùng có đặc quyền cao và đăng nhập từ địa chỉ IP lạ ? Login failed nhiều lần, xác thực Kerberos,NTLM failed nhiều lần -> dấu hiệu của tấn công Brute Force.  
+
+Công cụ sử dụng: 
+- `EvtxeCmd`: Chuyển evtx thành các file csv hoặc json.
+- `Timeline Explorer`: Sử dụng để đọc trực quan các file csv hoặc json.
+
+
+
+
+
+
+
